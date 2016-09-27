@@ -11,7 +11,7 @@ namespace requestPeso
 {
     public partial class Scheduler : ServiceBase
     {
-        SerialPortManager _spManager;
+        SerialPortManager _spManager = null;
         UdpClient _udpServer;
         IPEndPoint _remoteEP;
         const int _port = 34567;
@@ -26,6 +26,8 @@ namespace requestPeso
         const int _lengthPesata = 8;
         string _pesata;
 
+        const string _pathToLog = "C:\\logRequestPeso.txt";
+
         public Scheduler()
         {
             InitializeComponent();
@@ -33,16 +35,23 @@ namespace requestPeso
 
         protected override void OnStart(string[] args)
         {
-            Start();
+            if (args.Length == 2)
+                Start(args[1]);
+            else
+            {
+                errorLogs("Parametri errati, usare --port COMX");
+                this.Stop();
+            }
         }
         
         /// <summary>
         /// Inizializza la variabile _portName dal file C:\requestoPeso.txt e imposta le variabili per leggere dalla seriale
         /// Da mettere public per debug
         /// </summary>
-        private void Start()
+        private void Start(string port)
         {
-            getComToUse();
+            _portName = port;
+            //getComToUse();
             inizializzaSeriale();
             errorLogs("Servizio partito");
         }
@@ -171,8 +180,11 @@ namespace requestPeso
         /// </summary>
         protected override void OnStop()
         {
-            _spManager.StopListening();
-            _spManager.Dispose();
+            if (_spManager != null)
+            {
+                _spManager.StopListening();
+                _spManager.Dispose();
+            }
 
             errorLogs("Servizio fermato");
         }
@@ -187,9 +199,10 @@ namespace requestPeso
 
             try
             {
-                sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "LogPeso.txt", true);
+                //Old: AppDomain.CurrentDomain.BaseDirectory + "LogPeso.txt"
+                sw = new StreamWriter(_pathToLog, true);
                 string dt = String.Format("{0:dd-MM-yyyy HH:mm:ss}", DateTime.Now);
-                sw.WriteLine(String.Format("{0} - {1} - {2}", dt, ex.Source.ToString(), ex.Message));
+                sw.WriteLine(String.Format("{0} - Exception: {1} - {2}", dt, ex.Source.ToString(), ex.Message));
                 sw.Close();
                 this.Stop();
             }
@@ -208,7 +221,7 @@ namespace requestPeso
 
             try
             {
-                sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "LogPeso.txt", true);
+                sw = new StreamWriter(_pathToLog, true);
                 string dt = String.Format("{0:dd-MM-yyyy HH:mm:ss}", DateTime.Now);
                 sw.WriteLine(String.Format("{0} - {1}", dt, message));
                 sw.Close();
