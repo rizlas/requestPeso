@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace requestPeso
 {
@@ -13,7 +14,7 @@ namespace requestPeso
         /// </summary>
         static void Main()
         {
-            bool debug = false;
+            bool debug = true;
             int timeOut = 240000;
 
             switch (debug)
@@ -38,7 +39,7 @@ namespace requestPeso
 #else
                     Scheduler service = new Scheduler();
                     //Togliere commento a service.Start() per abilitare debug
-                    //service.Start();
+                    service.Start("COM7");
                     // Put a breakpoint on the following line to always catch
                     // your service when it has finished its work
                     System.Threading.Thread.Sleep(timeOut);
@@ -46,10 +47,6 @@ namespace requestPeso
 
                     break;
             }
-
-
-
-
         }
     }
 }

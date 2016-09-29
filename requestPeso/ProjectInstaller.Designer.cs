@@ -39,7 +39,6 @@
             // 
             // requestPeso
             // 
-            this.requestPeso.Description = "Richiede il peso a una bilancia collegata in seriale";
             this.requestPeso.ServiceName = "requestPeso";
             // 
             // ProjectInstaller
