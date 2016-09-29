@@ -24,11 +24,6 @@ namespace requestPeso
             {
                 return _portName;
             }
-
-            set
-            {
-                _portName = value;
-            }
         }
 
         public Scheduler()
@@ -38,20 +33,20 @@ namespace requestPeso
 
         protected override void OnStart(string[] args)
         {
-            //if (args.Length == 2)
-            //    Start(args[1]);
-            //else
-            //{
-            //    errorLogs("Parametri errati, usare --port COMX");
-            //    this.Stop();
-            //}
+            if (args.Length == 2)
+                Start(args[1]);
+            else
+            {
+                Logs.errorLogs("Parametri errati, usare --port COMX");
+                this.Stop();
+            }
         }
 
         /// <summary>
         /// Inizializza la variabile _portName dal file C:\requestoPeso.txt e imposta le variabili per leggere dalla seriale
         /// Da mettere public per debug
         /// </summary>
-        public void Start(string port)
+        private void Start(string port)
         {
             _portName = port;
 

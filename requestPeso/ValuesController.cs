@@ -9,13 +9,6 @@ namespace requestPeso
 {
     public class ValuesController : ApiController
     {
-        public ValuesController()
-        {
-            _portName = Scheduler.PortName;
-            inizializzaSeriale();
-            //inizializzaThread();
-        }
-
         SerialPortManager _spManager = null;
 
         const int _timeOut = 15000;
@@ -30,6 +23,13 @@ namespace requestPeso
         const string _pathToCom = "C:\\requestoPeso.txt";
 
         string _user;
+
+        public ValuesController()
+        {
+            _portName = Scheduler.PortName;
+            inizializzaSeriale();
+            //inizializzaThread();
+        }
 
         /// <summary>
         /// Gestisce le richieste in entrata.
@@ -94,7 +94,7 @@ namespace requestPeso
             {
                 _pesata = "";
 
-                //Logs.errorLogs("receive data from " + _remoteEP.ToString() + " " + received);
+                Logs.errorLogs("Ricevuta richiesta da: " + _user);
                 
                 _spManager.SendData("$");
 
