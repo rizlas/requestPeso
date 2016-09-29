@@ -50,16 +50,26 @@ namespace requestPeso
         {
             _portName = port;
 
-            _vc = new ValuesController();
-            inizializzaServerWeb();
+            //inizializzaServerWeb();
+            inizializzaThread();
 
             Logs.errorLogs("Servizio partito");
+        }
+
+        private void inizializzaThread()
+        {
+            Thread threadOnStart = new Thread(inizializzaServerWeb);
+            threadOnStart.Name = "threadServerWeb";
+            threadOnStart.IsBackground = false;
+            threadOnStart.Start();
         }
 
         private void inizializzaServerWeb()
         {
             try
             {
+                _vc = new ValuesController();
+
                 HttpSelfHostConfiguration config = new HttpSelfHostConfiguration("http://localhost:8080");
                 
                 config.Routes.MapHttpRoute( name: "DefaultApi",

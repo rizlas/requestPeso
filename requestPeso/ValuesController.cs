@@ -28,7 +28,6 @@ namespace requestPeso
         {
             _portName = Scheduler.PortName;
             inizializzaSeriale();
-            //inizializzaThread();
         }
 
         /// <summary>
@@ -142,14 +141,6 @@ namespace requestPeso
         }
 
         #region Deprecated
-
-        private void inizializzaThread()
-        {
-            //Thread threadOnStart = new Thread(requestToSerial);
-            //threadOnStart.Name = "threadConnection";
-            //threadOnStart.IsBackground = false;
-            //threadOnStart.Start();
-        }
 
         /// <summary>
         /// Legge la porta seriale da usare (COM X)
