@@ -16,7 +16,7 @@ namespace requestPeso
     public partial class Scheduler : ServiceBase
     {
         ValuesController _vc = null;
-        const string _configPath = "./config.ini";
+        const string _configPath = @"C:\Bilance\config.ini";
 
         static string _portName;
 
