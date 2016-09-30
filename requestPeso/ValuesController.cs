@@ -67,7 +67,7 @@ namespace requestPeso
             {
                 _spManager = new SerialPortManager();
                 SerialSettings mySerialSettings = _spManager.CurrentSerialSettings;
-
+                
                 mySerialSettings.BaudRate = _baudRate;
                 mySerialSettings.PortName = _portName;
                 mySerialSettings.Parity = System.IO.Ports.Parity.None;
@@ -132,6 +132,9 @@ namespace requestPeso
             //int dataInCoda = _spManager.SerialPort.BytesToRead;
         }
 
+        /// <summary>
+        /// Rilascia le risorse utilizzate dall'oggetto seriale
+        /// </summary>
         public new void Dispose()
         {
             base.Dispose();
@@ -139,29 +142,5 @@ namespace requestPeso
             if(_spManager != null)
                 _spManager.Dispose();
         }
-
-        #region Deprecated
-
-        /// <summary>
-        /// Legge la porta seriale da usare (COM X)
-        /// </summary>
-        private void getComToUse()
-        {
-            StreamReader sr = null;
-
-            try
-            {
-                sr = new StreamReader(_pathToCom);
-                _portName = sr.ReadLine();
-                sr.Close();
-            }
-            catch (Exception ex)
-            {
-                Logs.errorLogs(ex);
-            }
-        }
-
-        #endregion
-
     }
 }

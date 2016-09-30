@@ -9,12 +9,14 @@ using System.Threading;
 using System.Web.Http;
 using System.Web.Http.SelfHost;
 using System.Web.Http.Cors;
+using System.IO.Ports;
 
 namespace requestPeso
 {
     public partial class Scheduler : ServiceBase
     {
         ValuesController _vc = null;
+        const string _configPath = "./config.ini";
 
         static string _portName;
 
@@ -35,9 +37,14 @@ namespace requestPeso
         {
             if (args.Length == 2)
                 Start(args[1]);
+            else if (File.Exists(_configPath))
+            {
+                getComToUse();
+                Start(_portName);
+            }
             else
             {
-                Logs.errorLogs("Parametri errati, usare --port COMX");
+                Logs.errorLogs("Parametri errati o config.ini mancante, usare --port COMX per i parametri!");
                 this.Stop();
             }
         }
@@ -49,11 +56,26 @@ namespace requestPeso
         private void Start(string port)
         {
             _portName = port;
+            bool _goAhead = false;
 
+            string[] portExists = SerialPort.GetPortNames();
+            foreach (string item in portExists)
+            {
+                if (item == _portName)
+                    _goAhead = true;
+            }
+
+            if (_goAhead)
+            {
+                inizializzaThread();
+                Logs.errorLogs("Servizio partito");
+            }
+            else
+            {
+                Logs.errorLogs("Porta non trovata");
+                this.Stop();
+            }
             //inizializzaServerWeb();
-            inizializzaThread();
-
-            Logs.errorLogs("Servizio partito");
         }
 
         private void inizializzaThread()
@@ -96,6 +118,25 @@ namespace requestPeso
             _vc.Dispose();
             Logs.errorLogs("Servizio fermato");
             
+        }
+
+        /// <summary>
+        /// Legge la porta seriale da usare (COM X)
+        /// </summary>
+        private void getComToUse()
+        {
+            StreamReader sr = null;
+
+            try
+            {
+                sr = new StreamReader(_configPath);
+                _portName = sr.ReadLine();
+                sr.Close();
+            }
+            catch (Exception ex)
+            {
+                Logs.errorLogs(ex);
+            }
         }
     }
 }

@@ -39,7 +39,9 @@
             // 
             // requestPeso
             // 
+            this.requestPeso.Description = "Richiede il peso alla bilancia collegata sulla seriale";
             this.requestPeso.ServiceName = "requestPeso";
+            this.requestPeso.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller
             // 
