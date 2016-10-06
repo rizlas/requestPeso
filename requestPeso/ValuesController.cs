@@ -51,7 +51,7 @@ namespace requestPeso
                     _pesata = "";
                     _spManager.StopListening();
 
-                    if (tmp == "0.0000")
+                    if (tmp.Trim() == "0.0000")
                         tmp = "-1";
                 }
 
@@ -106,13 +106,12 @@ namespace requestPeso
                 
                 if (notTimeout)
                 {
-                    _pesata = "-1";
                     Logs.errorLogs("Peso letto: " + _pesata);
                 }
                 else
                 {
                     Logs.errorLogs("TIMEOUT");
-                    _pesata = "";
+                    _pesata = "-1";
                 }
 
                 return _pesata;
