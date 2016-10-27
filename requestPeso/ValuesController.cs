@@ -20,7 +20,7 @@ namespace requestPeso
         const int _lengthPesata = 8;
         string _pesata;
 
-        const string _pathToCom = "C:\\requestoPeso.txt";
+        //const string _pathToCom = "C:\\requestoPeso.txt";
 
         string _user;
 
@@ -44,12 +44,12 @@ namespace requestPeso
 
                 if (command == "$")
                 {
-                    _spManager.StartListening();
+                    //_spManager.StartListening();
 
                     tmp = requestToSerial();
 
                     _pesata = "";
-                    _spManager.StopListening();
+                    //_spManager.StopListening();
 
                     if (tmp.Trim() == "0.0000")
                         tmp = "-1";
@@ -77,9 +77,8 @@ namespace requestPeso
                 mySerialSettings.StopBits = System.IO.Ports.StopBits.One;
                 mySerialSettings.DataBits = _nBits;
 
+                _spManager.StartListening();
                 _spManager.NewSerialDataRecieved += new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved);
-
-                //_spManager.StartListening();
             }
             catch (Exception ex)
             {
@@ -119,6 +118,12 @@ namespace requestPeso
             catch (Exception ex)
             {
                 Logs.errorLogs(ex);
+
+                if (_spManager != null)
+                {
+                    _spManager.StopListening();
+                    inizializzaSeriale();
+                }
                 return string.Empty;
             }
         }
@@ -141,6 +146,9 @@ namespace requestPeso
         public new void Dispose()
         {
             base.Dispose();
+
+            if(_spManager != null)
+                _spManager.StopListening();
 
             if(_spManager != null)
                 _spManager.Dispose();
