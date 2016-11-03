@@ -11,7 +11,7 @@ namespace requestPeso
         /// Scrive su file gli errori generati
         /// </summary>
         /// <param name="ex">Oggetto che ha scatenato l'eccezione</param>
-        public static void errorLogs(Exception ex)
+        public static void WriteLine(Exception ex)
         {
             StreamWriter sw = null;
 
@@ -32,7 +32,7 @@ namespace requestPeso
         /// Scrive su file i log interessanti per l'utente
         /// </summary>
         /// <param name="message">Messaggio da salvare</param>
-        public static void errorLogs(string message)
+        public static void WriteLine(string message)
         {
             StreamWriter sw = null;
 
@@ -41,6 +41,25 @@ namespace requestPeso
                 sw = new StreamWriter(_pathToLog, true);
                 string dt = String.Format("{0:dd-MM-yyyy HH:mm:ss}", DateTime.Now);
                 sw.WriteLine(String.Format("{0} - {1}", dt, message));
+                sw.Close();
+            }
+            catch
+            {
+            }
+        }
+
+        /// <summary>
+        /// NewLine
+        /// </summary>
+        public static void WriteLine()
+        {
+            StreamWriter sw = null;
+
+            try
+            {
+                //Old: AppDomain.CurrentDomain.BaseDirectory + "LogPeso.txt"
+                sw = new StreamWriter(_pathToLog, true);
+                sw.WriteLine();
                 sw.Close();
             }
             catch

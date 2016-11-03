@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web.Http;
 using SerialPortListener.Serial;
-using System.IO;
 using System.Threading;
 using System.Text;
 
@@ -12,22 +11,36 @@ namespace requestPeso
         SerialPortManager _spManager = null;
 
         const int _timeOut = 15000;
-
         const int _baudRate = 9600;
         const int _nBits = 8;
-        string _portName = "COMX";
-
+        const int _tick = 120000;
         const int _lengthPesata = 8;
+
+        string _portName = "COMX";
         string _pesata;
-
-        //const string _pathToCom = "C:\\requestoPeso.txt";
-
         string _user;
+
+        System.Timers.Timer _keepAlive;
 
         public ValuesController()
         {
             _portName = Scheduler.PortName;
             inizializzaSeriale();
+
+            _keepAlive = new System.Timers.Timer(5000);
+            _keepAlive.Elapsed += Tick;
+            _keepAlive.Start();            
+        }
+
+        private void Tick(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if(_spManager != null)
+            {
+                _spManager.StartListening();
+                string tmp = requestToSerial();
+                _pesata = string.Empty;
+                _spManager.StopListening();
+            }
         }
 
         /// <summary>
@@ -39,22 +52,25 @@ namespace requestPeso
         {
             if (_spManager != null)
             {
+                _keepAlive.Stop();
+
                 string tmp = "";
                 _user = user;
 
                 if (command == "$")
                 {
-                    //_spManager.StartListening();
+                    _spManager.StartListening();
 
                     tmp = requestToSerial();
 
                     _pesata = "";
-                    //_spManager.StopListening();
+                    _spManager.StopListening();
 
                     if (tmp.Trim() == "0.0000")
                         tmp = "-1";
                 }
 
+                _keepAlive.Start();
                 return tmp.Trim();
             }
             else
@@ -77,12 +93,12 @@ namespace requestPeso
                 mySerialSettings.StopBits = System.IO.Ports.StopBits.One;
                 mySerialSettings.DataBits = _nBits;
 
-                _spManager.StartListening();
+                GC.SuppressFinalize(_spManager);
                 _spManager.NewSerialDataRecieved += new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved);
             }
             catch (Exception ex)
             {
-                Logs.errorLogs(ex);
+                Logs.WriteLine(ex);
             }
         }
 
@@ -95,35 +111,35 @@ namespace requestPeso
             {
                 _pesata = "";
 
-                Logs.errorLogs("Ricevuta richiesta da: " + _user);
+                if(!_keepAlive.Enabled)
+                    Logs.WriteLine("Ricevuta richiesta da: " + _user);
                 
                 _spManager.SendData("$");
 
                 //Ferma l'esecuzione del thread e attende la lettura completa del dato dalla seriale.
                 //Se la condizione non viene soddisfatta allo scadere del timeOut l'esecuzione andrà avanti.
                 bool notTimeout = SpinWait.SpinUntil(() => _pesata.Length == _lengthPesata, _timeOut);
-                
-                if (notTimeout)
+
+                if (!_keepAlive.Enabled)
                 {
-                    Logs.errorLogs("Peso letto: " + _pesata);
-                }
-                else
-                {
-                    Logs.errorLogs("TIMEOUT");
-                    _pesata = "-1";
+                    Logs.WriteLine("Pesata length: " + _pesata.Length + "  " + _pesata);
+
+                    if (notTimeout)
+                    {
+                        Logs.WriteLine("Peso letto: " + _pesata);
+                    }
+                    else
+                    {
+                        Logs.WriteLine("TIMEOUT");
+                        _pesata = "-1";
+                    }
                 }
 
                 return _pesata;
             }
             catch (Exception ex)
             {
-                Logs.errorLogs(ex);
-
-                if (_spManager != null)
-                {
-                    _spManager.StopListening();
-                    inizializzaSeriale();
-                }
+                Logs.WriteLine(ex);
                 return string.Empty;
             }
         }

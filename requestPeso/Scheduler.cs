@@ -1,10 +1,6 @@
 ﻿using System;
 using System.ServiceProcess;
-using SerialPortListener.Serial;
 using System.IO;
-using System.Text;
-using System.Net.Sockets;
-using System.Net;
 using System.Threading;
 using System.Web.Http;
 using System.Web.Http.SelfHost;
@@ -44,7 +40,7 @@ namespace requestPeso
             }
             else
             {
-                Logs.errorLogs("Parametri errati o config.ini mancante, usare --port COMX per i parametri!");
+                Logs.WriteLine("Parametri errati o config.ini mancante, usare --port COMX per i parametri!");
                 this.Stop();
             }
         }
@@ -68,11 +64,11 @@ namespace requestPeso
             if (_goAhead)
             {
                 inizializzaThread();
-                Logs.errorLogs("Servizio partito");
+                Logs.WriteLine("Servizio partito");
             }
             else
             {
-                Logs.errorLogs("Porta non trovata");
+                Logs.WriteLine("Porta non trovata, controlla file config.ini o i parametri (--port COMX)!");
                 this.Stop();
             }
             //inizializzaServerWeb();
@@ -102,11 +98,11 @@ namespace requestPeso
                 HttpSelfHostServer server = new HttpSelfHostServer(config);
                 server.OpenAsync().Wait();
 
-                Logs.errorLogs("WEBSERVER CREATO!");
+                Logs.WriteLine("WEBSERVER CREATO!");
             }
             catch (Exception ex)
             {
-                Logs.errorLogs(ex);
+                Logs.WriteLine(ex);
             }
         }
         
@@ -116,7 +112,7 @@ namespace requestPeso
         protected override void OnStop()
         {
             _vc.Dispose();
-            Logs.errorLogs("Servizio fermato");
+            Logs.WriteLine("Servizio fermato");
             
         }
 
@@ -135,7 +131,7 @@ namespace requestPeso
             }
             catch (Exception ex)
             {
-                Logs.errorLogs(ex);
+                Logs.WriteLine(ex);
             }
         }
     }
