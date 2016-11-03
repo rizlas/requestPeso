@@ -39,7 +39,7 @@ namespace requestPeso
 #else
                     Scheduler service = new Scheduler();
                     //Togliere commento a service.Start() per abilitare debug
-                    //service.Start("COM7");
+                    //service.Debug("COM7");
                     // Put a breakpoint on the following line to always catch
                     // your service when it has finished its work
                     System.Threading.Thread.Sleep(timeOut);

@@ -5,7 +5,8 @@ namespace requestPeso
 {
     static class Logs
     {
-        const string _pathToLog = "C:\\logRequestPeso.txt";
+        const string _pathToLog = @"C:\Bilance\logsBilance.txt";
+        const string _directory = @"C:\Bilance";
 
         /// <summary>
         /// Scrive su file gli errori generati
@@ -17,8 +18,10 @@ namespace requestPeso
 
             try
             {
-                //Old: AppDomain.CurrentDomain.BaseDirectory + "LogPeso.txt"
-                sw = new StreamWriter(_pathToLog, true);
+                if (!Directory.Exists(_directory))
+                    Directory.CreateDirectory(_directory);
+
+                sw = File.AppendText(_pathToLog);
                 string dt = String.Format("{0:dd-MM-yyyy HH:mm:ss}", DateTime.Now);
                 sw.WriteLine(String.Format("{0} - Exception: {1} - {2}", dt, ex.Source.ToString(), ex.Message));
                 sw.Close();
@@ -38,7 +41,10 @@ namespace requestPeso
 
             try
             {
-                sw = new StreamWriter(_pathToLog, true);
+                if (!Directory.Exists(_directory))
+                    Directory.CreateDirectory(_directory);
+
+                sw = File.AppendText(_pathToLog);
                 string dt = String.Format("{0:dd-MM-yyyy HH:mm:ss}", DateTime.Now);
                 sw.WriteLine(String.Format("{0} - {1}", dt, message));
                 sw.Close();
@@ -57,8 +63,10 @@ namespace requestPeso
 
             try
             {
-                //Old: AppDomain.CurrentDomain.BaseDirectory + "LogPeso.txt"
-                sw = new StreamWriter(_pathToLog, true);
+                if (!Directory.Exists(_directory))
+                    Directory.CreateDirectory(_directory);
+
+                sw = File.AppendText(_pathToLog);
                 sw.WriteLine();
                 sw.Close();
             }

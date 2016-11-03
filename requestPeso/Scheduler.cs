@@ -71,7 +71,6 @@ namespace requestPeso
                 Logs.WriteLine("Porta non trovata, controlla file config.ini o i parametri (--port COMX)!");
                 this.Stop();
             }
-            //inizializzaServerWeb();
         }
 
         private void inizializzaThread()
@@ -111,9 +110,10 @@ namespace requestPeso
         /// </summary>
         protected override void OnStop()
         {
-            _vc.Dispose();
+            if(_vc != null)
+                _vc.Dispose();
+
             Logs.WriteLine("Servizio fermato");
-            
         }
 
         /// <summary>
@@ -133,6 +133,11 @@ namespace requestPeso
             {
                 Logs.WriteLine(ex);
             }
+        }
+
+        public void Debug(string port)
+        {
+            Start(port);
         }
     }
 }
