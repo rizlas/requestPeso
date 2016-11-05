@@ -9,6 +9,7 @@ namespace requestPeso
     public class ValuesController : ApiController
     {
         SerialPortManager _spManager = null;
+        SerialSettings _mySerialSettings = null;
 
         const int _timeOut = 15000;
         const int _baudRate = 9600;
@@ -85,13 +86,13 @@ namespace requestPeso
             try
             {
                 _spManager = new SerialPortManager();
-                SerialSettings mySerialSettings = _spManager.CurrentSerialSettings;
+                _mySerialSettings = _spManager.CurrentSerialSettings;
                 
-                mySerialSettings.BaudRate = _baudRate;
-                mySerialSettings.PortName = _portName;
-                mySerialSettings.Parity = System.IO.Ports.Parity.None;
-                mySerialSettings.StopBits = System.IO.Ports.StopBits.One;
-                mySerialSettings.DataBits = _nBits;
+                _mySerialSettings.BaudRate = _baudRate;
+                _mySerialSettings.PortName = _portName;
+                _mySerialSettings.Parity = System.IO.Ports.Parity.None;
+                _mySerialSettings.StopBits = System.IO.Ports.StopBits.One;
+                _mySerialSettings.DataBits = _nBits;
 
                 GC.SuppressFinalize(_spManager);
                 _spManager.NewSerialDataRecieved += new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved);
@@ -99,6 +100,7 @@ namespace requestPeso
             catch (Exception ex)
             {
                 Logs.WriteLine(ex);
+                Logs.WriteLine("From: inizializzaSeriale()");
             }
         }
 
@@ -140,6 +142,7 @@ namespace requestPeso
             catch (Exception ex)
             {
                 Logs.WriteLine(ex);
+                Logs.WriteLine("From: requestToSerial()");
                 return string.Empty;
             }
         }

@@ -16,6 +16,8 @@ namespace requestPeso
 
         static string _portName;
 
+        Thread _threadOnStart;
+
         public static string PortName
         {
             get
@@ -75,10 +77,10 @@ namespace requestPeso
 
         private void inizializzaThread()
         {
-            Thread threadOnStart = new Thread(inizializzaServerWeb);
-            threadOnStart.Name = "threadServerWeb";
-            threadOnStart.IsBackground = false;
-            threadOnStart.Start();
+            _threadOnStart = new Thread(inizializzaServerWeb);
+            _threadOnStart.Name = "threadServerWeb";
+            _threadOnStart.IsBackground = false;
+            _threadOnStart.Start();
         }
 
         private void inizializzaServerWeb()
@@ -102,6 +104,7 @@ namespace requestPeso
             catch (Exception ex)
             {
                 Logs.WriteLine(ex);
+                Logs.WriteLine("From: inizializzaServerWeb()");
             }
         }
         
@@ -132,6 +135,7 @@ namespace requestPeso
             catch (Exception ex)
             {
                 Logs.WriteLine(ex);
+                Logs.WriteLine("From: getComToUse()");
             }
         }
 
