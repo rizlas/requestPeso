@@ -87,7 +87,7 @@ namespace requestPeso
             {
                 _spManager = new SerialPortManager();
                 _mySerialSettings = _spManager.CurrentSerialSettings;
-                
+
                 _mySerialSettings.BaudRate = _baudRate;
                 _mySerialSettings.PortName = _portName;
                 _mySerialSettings.Parity = System.IO.Ports.Parity.None;
