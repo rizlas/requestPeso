@@ -100,7 +100,6 @@ namespace requestPeso
             catch (Exception ex)
             {
                 Logs.WriteLine(ex);
-                Logs.WriteLine("From: inizializzaSeriale()");
             }
         }
 
@@ -142,7 +141,6 @@ namespace requestPeso
             catch (Exception ex)
             {
                 Logs.WriteLine(ex);
-                Logs.WriteLine("From: requestToSerial()");
                 return string.Empty;
             }
         }

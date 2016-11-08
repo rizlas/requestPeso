@@ -23,7 +23,7 @@ namespace requestPeso
 
                 sw = File.AppendText(_pathToLog);
                 string dt = String.Format("{0:dd-MM-yyyy HH:mm:ss}", DateTime.Now);
-                sw.WriteLine(String.Format("{0} - Exception: {1} - {2}", dt, ex.Source.ToString(), ex.Message));
+                sw.WriteLine(String.Format("{0} - Exception: {1} - {2}", dt, ex.Source.ToString(), ex.Message, ex.StackTrace));
                 sw.Close();
             }
             catch

@@ -104,7 +104,6 @@ namespace requestPeso
             catch (Exception ex)
             {
                 Logs.WriteLine(ex);
-                Logs.WriteLine("From: inizializzaServerWeb()");
             }
         }
         
@@ -135,7 +134,6 @@ namespace requestPeso
             catch (Exception ex)
             {
                 Logs.WriteLine(ex);
-                Logs.WriteLine("From: getComToUse()");
             }
         }
 
