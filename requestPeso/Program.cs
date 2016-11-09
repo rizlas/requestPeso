@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ServiceProcess;
 
 namespace requestPeso
 {
@@ -31,20 +26,13 @@ namespace requestPeso
                     break;
 
                 case true:
-
-#if (!DEBUG)
-                System.ServiceProcess.ServiceBase[] ServicesToRun;
-                ServicesToRun = new System.ServiceProcess.ServiceBase[] { new Service1() };
-                System.ServiceProcess.ServiceBase.Run(ServicesToRun);
-#else
                     Scheduler service = new Scheduler();
-                    //Togliere commento a service.Start() per abilitare debug
-                    //service.Debug("COM7");
+                    //Togliere commento a service.Debug() per abilitare debug
+                    //service.Debug("COM4");
+
                     // Put a breakpoint on the following line to always catch
                     // your service when it has finished its work
                     System.Threading.Thread.Sleep(timeOut);
-#endif
-
                     break;
             }
         }

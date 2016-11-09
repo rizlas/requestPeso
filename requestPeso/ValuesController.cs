@@ -21,28 +21,36 @@ namespace requestPeso
         string _pesata;
         string _user;
 
-        System.Timers.Timer _keepAlive;
+        //System.Timers.Timer _keepAlive;
 
         public ValuesController()
         {
             _portName = Scheduler.PortName;
             inizializzaSeriale();
 
-            _keepAlive = new System.Timers.Timer(5000);
-            _keepAlive.Elapsed += Tick;
-            _keepAlive.Start();            
+            //_keepAlive = new System.Timers.Timer(5000);
+            //_keepAlive.Elapsed += Tick;
+            //_keepAlive.Start();            
         }
 
-        private void Tick(object sender, System.Timers.ElapsedEventArgs e)
+        ~ValuesController()
         {
+            Logs.WriteLine("Distruttore");
+
             if(_spManager != null)
-            {
-                _spManager.StartListening();
-                string tmp = requestToSerial();
-                _pesata = string.Empty;
-                _spManager.StopListening();
-            }
+                _spManager.Dispose();
         }
+
+        //private void Tick(object sender, System.Timers.ElapsedEventArgs e)
+        //{
+        //    if(_spManager != null)
+        //    {
+        //        _spManager.StartListening();
+        //        string tmp = requestToSerial();
+        //        _pesata = string.Empty;
+        //        _spManager.StopListening();
+        //    }
+        //}
 
         /// <summary>
         /// Gestisce le richieste in entrata.
@@ -53,7 +61,7 @@ namespace requestPeso
         {
             if (_spManager != null)
             {
-                _keepAlive.Stop();
+                //_keepAlive.Stop();
 
                 string tmp = "";
                 _user = user;
@@ -65,13 +73,15 @@ namespace requestPeso
                     tmp = requestToSerial();
 
                     _pesata = "";
-                    _spManager.StopListening();
 
                     if (tmp.Trim() == "0.0000")
                         tmp = "-1";
+
+                    _spManager.StopListening();
+                    _spManager.Dispose();
                 }
 
-                _keepAlive.Start();
+                //_keepAlive.Start();
                 return tmp.Trim();
             }
             else
@@ -85,17 +95,20 @@ namespace requestPeso
         {
             try
             {
-                _spManager = new SerialPortManager();
-                _mySerialSettings = _spManager.CurrentSerialSettings;
+                if (_spManager == null)
+                {
+                    _spManager = new SerialPortManager();
+                    _mySerialSettings = _spManager.CurrentSerialSettings;
 
-                _mySerialSettings.BaudRate = _baudRate;
-                _mySerialSettings.PortName = _portName;
-                _mySerialSettings.Parity = System.IO.Ports.Parity.None;
-                _mySerialSettings.StopBits = System.IO.Ports.StopBits.One;
-                _mySerialSettings.DataBits = _nBits;
+                    _mySerialSettings.BaudRate = _baudRate;
+                    _mySerialSettings.PortName = _portName;
+                    _mySerialSettings.Parity = System.IO.Ports.Parity.None;
+                    _mySerialSettings.StopBits = System.IO.Ports.StopBits.One;
+                    _mySerialSettings.DataBits = _nBits;
 
-                GC.SuppressFinalize(_spManager);
-                _spManager.NewSerialDataRecieved += new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved);
+                    //GC.SuppressFinalize(_spManager);
+                    _spManager.NewSerialDataRecieved += new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved);
+                }
             }
             catch (Exception ex)
             {
@@ -112,7 +125,7 @@ namespace requestPeso
             {
                 _pesata = "";
 
-                if(!_keepAlive.Enabled)
+                //if(!_keepAlive.Enabled)
                     Logs.WriteLine("Ricevuta richiesta da: " + _user);
                 
                 _spManager.SendData("$");
@@ -121,8 +134,8 @@ namespace requestPeso
                 //Se la condizione non viene soddisfatta allo scadere del timeOut l'esecuzione andrà avanti.
                 bool notTimeout = SpinWait.SpinUntil(() => _pesata.Length == _lengthPesata, _timeOut);
 
-                if (!_keepAlive.Enabled)
-                {
+                //if (!_keepAlive.Enabled)
+                //{
                     Logs.WriteLine("Pesata length: " + _pesata.Length + "  " + _pesata);
 
                     if (notTimeout)
@@ -134,7 +147,7 @@ namespace requestPeso
                         Logs.WriteLine("TIMEOUT");
                         _pesata = "-1";
                     }
-                }
+                //}
 
                 return _pesata;
             }
@@ -160,15 +173,17 @@ namespace requestPeso
         /// <summary>
         /// Rilascia le risorse utilizzate dall'oggetto seriale
         /// </summary>
-        public new void Dispose()
-        {
-            base.Dispose();
+        //public new void Dispose()
+        //{
+        //    base.Dispose();
 
-            if(_spManager != null)
-                _spManager.StopListening();
+        //    if(_spManager != null)
+        //        _spManager.StopListening();
 
-            if(_spManager != null)
-                _spManager.Dispose();
-        }
+        //    if(_spManager != null)
+        //        _spManager.Dispose();
+
+        //    Logs.WriteLine("Disposed....");
+        //}
     }
 }
