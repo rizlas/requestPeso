@@ -21,6 +21,8 @@ namespace requestPeso
                 if (!Directory.Exists(_directory))
                     Directory.CreateDirectory(_directory);
 
+                resetFile();
+
                 sw = File.AppendText(_pathToLog);
                 string dt = String.Format("{0:dd-MM-yyyy HH:mm:ss}", DateTime.Now);
                 sw.WriteLine(String.Format("{0} - Exception: {1} - {2} \r\n{3}", dt, ex.Source.ToString(), ex.Message, ex.StackTrace));
@@ -44,6 +46,8 @@ namespace requestPeso
                 if (!Directory.Exists(_directory))
                     Directory.CreateDirectory(_directory);
 
+                resetFile();
+
                 sw = File.AppendText(_pathToLog);
                 string dt = String.Format("{0:dd-MM-yyyy HH:mm:ss}", DateTime.Now);
                 sw.WriteLine(String.Format("{0} - {1}", dt, message));
@@ -65,6 +69,8 @@ namespace requestPeso
             {
                 if (!Directory.Exists(_directory))
                     Directory.CreateDirectory(_directory);
+
+                resetFile();
 
                 sw = File.AppendText(_pathToLog);
                 sw.WriteLine();
