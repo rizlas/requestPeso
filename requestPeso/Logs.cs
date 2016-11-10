@@ -108,6 +108,8 @@ namespace requestPeso
                                 stop = true;
                         }
 
+                        sr.Close();
+
                         if (stop)
                             if (DateTime.Now.Subtract(dt).Days > 30)
                                 ret = true;

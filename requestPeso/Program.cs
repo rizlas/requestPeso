@@ -28,7 +28,7 @@ namespace requestPeso
                 case true:
                     Scheduler service = new Scheduler();
                     //Togliere commento a service.Debug() per abilitare debug
-                    //service.Debug("COM4");
+                    //service.Debug("COM6");
 
                     // Put a breakpoint on the following line to always catch
                     // your service when it has finished its work
