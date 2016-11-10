@@ -66,7 +66,7 @@ namespace requestPeso
             if (_goAhead)
             {
                 inizializzaThread();
-                Logs.WriteLine("Servizio partito");
+                Logs.WriteLine("Servizio partito..........");
             }
             else
             {
@@ -115,7 +115,7 @@ namespace requestPeso
             if(_vc != null)
                 _vc.Dispose();
 
-            Logs.WriteLine("Servizio fermato");
+            Logs.WriteLine("Servizio fermato..........");
         }
 
         /// <summary>

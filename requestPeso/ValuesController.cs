@@ -21,36 +21,19 @@ namespace requestPeso
         string _pesata;
         string _user;
 
-        //System.Timers.Timer _keepAlive;
-
         public ValuesController()
         {
             _portName = Scheduler.PortName;
             inizializzaSeriale();
-
-            //_keepAlive = new System.Timers.Timer(5000);
-            //_keepAlive.Elapsed += Tick;
-            //_keepAlive.Start();            
         }
 
         ~ValuesController()
         {
             Logs.WriteLine("Distruttore");
 
-            if(_spManager != null)
+            if (_spManager != null)
                 _spManager.Dispose();
         }
-
-        //private void Tick(object sender, System.Timers.ElapsedEventArgs e)
-        //{
-        //    if(_spManager != null)
-        //    {
-        //        _spManager.StartListening();
-        //        string tmp = requestToSerial();
-        //        _pesata = string.Empty;
-        //        _spManager.StopListening();
-        //    }
-        //}
 
         /// <summary>
         /// Gestisce le richieste in entrata.
@@ -61,8 +44,6 @@ namespace requestPeso
         {
             if (_spManager != null)
             {
-                //_keepAlive.Stop();
-
                 string tmp = "";
                 _user = user;
 
@@ -81,7 +62,6 @@ namespace requestPeso
                     _spManager.Dispose();
                 }
 
-                //_keepAlive.Start();
                 return tmp.Trim();
             }
             else
@@ -125,29 +105,26 @@ namespace requestPeso
             {
                 _pesata = "";
 
-                //if(!_keepAlive.Enabled)
-                    Logs.WriteLine("Ricevuta richiesta da: " + _user);
-                
+                Logs.WriteLine("Ricevuta richiesta da: " + _user);
+
                 _spManager.SendData("$");
 
                 //Ferma l'esecuzione del thread e attende la lettura completa del dato dalla seriale.
                 //Se la condizione non viene soddisfatta allo scadere del timeOut l'esecuzione andrà avanti.
                 bool notTimeout = SpinWait.SpinUntil(() => _pesata.Length == _lengthPesata, _timeOut);
 
-                //if (!_keepAlive.Enabled)
-                //{
-                    Logs.WriteLine("Pesata length: " + _pesata.Length + "  " + _pesata);
+                //Logs.WriteLine("Pesata length: " + _pesata.Length + "  " + _pesata);
 
-                    if (notTimeout)
-                    {
-                        Logs.WriteLine("Peso letto: " + _pesata);
-                    }
-                    else
-                    {
-                        Logs.WriteLine("TIMEOUT");
-                        _pesata = "-1";
-                    }
-                //}
+                if (notTimeout)
+                {
+                    Logs.WriteLine("Peso letto: " + _pesata);
+                    Logs.WriteLine();
+                }
+                else
+                {
+                    Logs.WriteLine("TIMEOUT");
+                    _pesata = "-1";
+                }
 
                 return _pesata;
             }
@@ -169,21 +146,5 @@ namespace requestPeso
 
             //int dataInCoda = _spManager.SerialPort.BytesToRead;
         }
-
-        /// <summary>
-        /// Rilascia le risorse utilizzate dall'oggetto seriale
-        /// </summary>
-        //public new void Dispose()
-        //{
-        //    base.Dispose();
-
-        //    if(_spManager != null)
-        //        _spManager.StopListening();
-
-        //    if(_spManager != null)
-        //        _spManager.Dispose();
-
-        //    Logs.WriteLine("Disposed....");
-        //}
     }
 }

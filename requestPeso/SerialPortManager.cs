@@ -20,12 +20,10 @@ namespace SerialPortListener.Serial
                 _currentSerialSettings.PortName = _currentSerialSettings.PortNameCollection[0];
         }
 
-        
         ~SerialPortManager()
         {
             Dispose(false);
         }
-
 
         #region Fields
         private SerialPort _serialPort;
@@ -141,7 +139,6 @@ namespace SerialPortListener.Serial
             }
         }
 
-
         /// <summary>
         /// Retrieves the current selected device's COMMPROP structure, and extracts the dwSettableBaud property
         /// </summary>
@@ -178,7 +175,6 @@ namespace SerialPortListener.Serial
                 _serialPort.Dispose();
             }
         }
-
 
         #endregion
 

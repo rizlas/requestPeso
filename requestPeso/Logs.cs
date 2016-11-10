@@ -74,5 +74,63 @@ namespace requestPeso
             {
             }
         }
+
+        /// <summary>
+        /// Controlla se è passato un mese dal primo log scritto
+        /// </summary>
+        /// <returns>True se è passato un mese altrimenti false</returns>
+        private static bool getFirstMonthLogged()
+        {
+            StreamReader sr = null;
+
+            try
+            {
+                if (File.Exists(_pathToLog))
+                {
+                    var size = new FileInfo(_pathToLog).Length;
+                    bool ret = false;
+
+                    if (size > 0)
+                    {
+                        sr = new StreamReader(_pathToLog);
+                        bool stop = false;
+                        DateTime dt = new DateTime();
+
+                        while (!stop)
+                        {
+                            if (DateTime.TryParse(sr.ReadLine().Split(' ')[0], out dt))
+                                stop = true;
+                        }
+
+                        if (stop)
+                            if (DateTime.Now.Subtract(dt).Days > 30)
+                                ret = true;
+                    }
+
+                    return ret;
+                }
+                else
+                    return false;
+            }
+            catch 
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Svuota il file di log se passato un mese
+        /// </summary>
+        private static void resetFile()
+        {
+            try
+            {
+                if (getFirstMonthLogged())
+                    File.WriteAllText(_pathToLog, string.Empty);
+            }
+            catch
+            {
+            }
+        }
     }
 }
