@@ -16,6 +16,7 @@ namespace SerialPortListener.Serial
             _currentSerialSettings.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_currentSerialSettings_PropertyChanged);
 
             // If serial ports is found, we select the first found
+
             //if (_currentSerialSettings.PortNameCollection.Length > 0)
             //    _currentSerialSettings.PortName = _currentSerialSettings.PortNameCollection[0];
         }
